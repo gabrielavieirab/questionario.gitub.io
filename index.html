@@ -5,7 +5,75 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Questionário – 8 Conjuntos (4•3•2•1)</title>
 <style>
-/* ... estilos (iguais aos que já te mandei) ... */
+  :root{
+    --bg:#ffffff;              /* fundo principal branco */
+    --ink:#111827;             /* texto principal */
+    --muted:#6b7280;           /* texto secundário */
+    --panel:#ffffff;           /* cartões */
+    --border:#e5e7eb;          /* bordas finas */
+    --primary:#3b1a66;         /* roxo escuro */
+    --emerald:#065f46;         /* verde esmeralda escuro */
+    --emerald-bright:#10b981;  /* verde p/ realce */
+    --ok:#16a34a;              /* ok */
+    --err:#dc2626;             /* erro */
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif}
+  header{padding:22px 16px 10px;border-bottom:2px solid var(--primary);background:#fafafa}
+  header h1{font-size:22px;margin:0 0 6px;color:var(--primary)}
+  header p{margin:0;color:var(--muted);font-size:14px}
+
+  main{max-width:980px;margin:0 auto;padding:16px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:13px;color:var(--muted)}
+  .field input{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
+
+  .conjunto{border:1px solid var(--border);border-radius:14px;padding:14px 14px 10px;margin:14px 0;background:var(--panel)}
+  .conjunto[data-valid="true"]{border-color:var(--emerald-bright)}
+  .conjunto[data-valid="false"]{border-color:var(--err)}
+  .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .badge{font-size:12px;color:#fff;background:var(--primary);border-radius:999px;padding:4px 8px}
+  .help{font-size:13px;color:var(--muted)}
+  .preview-label{display:none !important;} /* oculto no UI */
+
+  .lista{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:10px;column-gap:12px;align-items:center}
+  .item{display:contents}
+  .texto{line-height:1.35}
+  select{
+    appearance:none;background:#fff;border:1px solid var(--border);border-radius:10px;
+    padding:8px 10px;min-width:80px
+  }
+  select:invalid{color:#9ca3af}
+  .sum{margin-top:10px;font-size:12px;color:var(--muted)}
+  .sum.ok{color:var(--emerald)}
+  .sum.err{color:var(--err)}
+
+  .footer-actions{display:flex;gap:12px;align-items:center;justify-content:flex-end;
+    padding:16px;border-top:1px solid var(--border);margin-top:12px;flex-wrap:wrap}
+  button{border:0;border-radius:12px;padding:12px 16px;font-weight:600;cursor:pointer}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+  .btn-wa{background:var(--emerald-bright);color:#053B2B}
+  .btn-wa:disabled{opacity:.5;cursor:not-allowed}
+
+  .alert{display:none;margin:10px 0 0;color:#fff;background:var(--err);
+    padding:12px;border-radius:10px;font-size:14px}
+  .okmsg{display:none;margin:10px 0 0;color:#065f46;background:#d1fae5;
+    padding:12px;border-radius:10px;font-size:14px}
+
+  .result-box{display:none;margin-top:14px;background:#f9fafb;border:1px solid var(--border);
+    border-radius:12px;padding:14px}
+  .result-box h3{margin:0 0 10px;font-size:16px;color:var(--emerald)}
+  .result-box pre{white-space:pre-wrap;word-wrap:break-word;color:#111827;
+    background:#fff;border:1px dashed var(--border);padding:10px;border-radius:8px}
+
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  @media (hover:none){select{min-height:44px}}
 </style>
 </head>
 <body>
@@ -28,45 +96,102 @@
         </div>
       </div>
 
-      <!-- CONJUNTO A -->
+      <!-- ======= CONJUNTO A ======= -->
       <section class="conjunto" data-conjunto="Direcionado ➜ Diretivo" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">A</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto A">
+          <div class="item" data-trait="Confiante em si"><div class="texto">Confiante em si</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Otimista"><div class="texto">Otimista</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Deliberado"><div class="texto">Deliberado</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Contido"><div class="texto">Contido</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO B -->
+      <!-- ======= CONJUNTO B ======= -->
       <section class="conjunto" data-conjunto="Aventureiro ➜ Experiencial" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">B</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto B">
+          <div class="item" data-trait="Aventureiro"><div class="texto">Aventureiro</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Metódico"><div class="texto">Metódico</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Analítico"><div class="texto">Analítico</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Sociável"><div class="texto">Sociável</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO C -->
+      <!-- ======= CONJUNTO C ======= -->
       <section class="conjunto" data-conjunto="Planejamento ➜ Organização" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">C</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto C">
+          <div class="item" data-trait="Organizado"><div class="texto">Organizado</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Flexível"><div class="texto">Flexível</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Pragmático"><div class="texto">Pragmático</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Criativo"><div class="texto">Criativo</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO D -->
+      <!-- ======= CONJUNTO D ======= -->
       <section class="conjunto" data-conjunto="Relacionamento ➜ Influência" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">D</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto D">
+          <div class="item" data-trait="Comunicativo"><div class="texto">Comunicativo</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Empático"><div class="texto">Empático</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Persuasivo"><div class="texto">Persuasivo</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Reservado"><div class="texto">Reservado</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO E -->
+      <!-- ======= CONJUNTO E ======= -->
       <section class="conjunto" data-conjunto="Execução ➜ Ritmo" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">E</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto E">
+          <div class="item" data-trait="Ágil"><div class="texto">Ágil</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Cauteloso"><div class="texto">Cauteloso</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Persistente"><div class="texto">Persistente</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Adaptável"><div class="texto">Adaptável</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO F -->
+      <!-- ======= CONJUNTO F ======= -->
       <section class="conjunto" data-conjunto="Decisão ➜ Critério" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">F</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto F">
+          <div class="item" data-trait="Racional"><div class="texto">Racional</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Intuitivo"><div class="texto">Intuitivo</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Detalhista"><div class="texto">Detalhista</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Visionário"><div class="texto">Visionário</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO G -->
+      <!-- ======= CONJUNTO G ======= -->
       <section class="conjunto" data-conjunto="Resiliência ➜ Emoção" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">G</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto G">
+          <div class="item" data-trait="Estável"><div class="texto">Estável</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Sensível"><div class="texto">Sensível</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Confiante"><div class="texto">Confiante</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Atento ao outro"><div class="texto">Atento ao outro</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- CONJUNTO H -->
+      <!-- ======= CONJUNTO H ======= -->
       <section class="conjunto" data-conjunto="Estratégia ➜ Resultado" data-valid="false">
-        <!-- ... opções ... -->
+        <div class="top"><span class="badge">H</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
+        <div class="lista" role="group" aria-label="Conjunto H">
+          <div class="item" data-trait="Orientado a metas"><div class="texto">Orientado a metas</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Colaborativo"><div class="texto">Colaborativo</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Independente"><div class="texto">Independente</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+          <div class="item" data-trait="Orientado a processos"><div class="texto">Orientado a processos</div><select required><option value="" disabled selected>—</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></div>
+        </div>
+        <div class="sum">Soma: 0 / 10</div>
       </section>
+
       <div class="footer-actions">
         <button type="button" class="btn-wa" id="btnWhats">Enviar no WhatsApp</button>
         <button class="btn-primary" id="btnEnviar" type="submit" disabled>Finalizar</button>
@@ -84,41 +209,166 @@
 
 <script>
 (function(){
+  // número da cliente
   const WHATSAPP_NUM = '5561981650524';
 
   const form = document.getElementById('formQuiz');
   const conjuntos = [...document.querySelectorAll('.conjunto')];
   const btnEnviar = document.getElementById('btnEnviar');
-  const btnWhats = document.getElementById('btnWhats');
-  const alerta = document.getElementById('alerta');
-  const okmsg = document.getElementById('okmsg');
+  const btnWhats  = document.getElementById('btnWhats');
+  const alerta    = document.getElementById('alerta');
+  const okmsg     = document.getElementById('okmsg');
   const resultBox = document.getElementById('resultBox');
-  const resultText = document.getElementById('resultText');
+  const resultText= document.getElementById('resultText');
 
-  function idOk(){ /* valida nome e número */ }
-  function readyToSend(){ /* checa conjuntos */ }
-  function coletarRespostas(){ /* coleta dados */ }
-  function montarMensagem(data,incluirInterno){ /* formata texto */ }
-  function baixarCSV(data){ /* gera CSV */ }
+  /* ===== atualização por conjunto: impede repetir 4/3/2/1 e soma ===== */
+  conjuntos.forEach((cj) => {
+    const selects = [...cj.querySelectorAll('select')];
+    const sumEl   = cj.querySelector('.sum');
 
-  form.addEventListener('submit', (e)=>{ 
+    function updateState(){
+      const values = selects.map(s => s.value).filter(Boolean);
+
+      // Bloquear repetição do mesmo número no conjunto
+      selects.forEach(s => {
+        const current = s.value;
+        [...s.options].forEach(opt => {
+          if(!opt.value) return;               // ignora placeholder
+          const used = values.includes(opt.value);
+          opt.disabled = used && opt.value !== current;
+        });
+      });
+
+      // Soma e validação
+      const sum = values.map(Number).reduce((a,b)=>a+b,0);
+      sumEl.textContent = `Soma: ${sum} / 10`;
+      const complete = values.length === 4;
+      const valid    = complete && sum === 10 && new Set(values).size === 4;
+      cj.dataset.valid = valid ? 'true' : 'false';
+      sumEl.className = 'sum ' + (valid ? 'ok' : (complete ? 'err' : ''));
+
+      validateForm();
+    }
+
+    selects.forEach(s => s.addEventListener('change', updateState));
+    updateState();
+  });
+
+  function idOk(){
+    const nome = document.getElementById('nome').value.trim();
+    const num  = document.getElementById('numero').value.trim();
+    return nome.length >= 3 && num.length >= 8;
+  }
+
+  function validateForm(){
+    const allValid = conjuntos.every(cj => cj.dataset.valid === 'true');
+    const ready = allValid && idOk();
+    btnEnviar.disabled = !ready;
+    btnWhats.disabled  = !ready;
+    alerta.style.display = 'none';
+    okmsg.style.display  = 'none';
+  }
+  form.addEventListener('input', validateForm);
+
+  function readyToSend(){
+    const invalids = conjuntos.filter(cj => cj.dataset.valid !== 'true');
+    if(!idOk()){
+      alerta.textContent = 'Preencha Nome e Número corretamente.';
+      alerta.style.display = 'block';
+      window.scrollTo({top:0, behavior:'smooth'});
+      return false;
+    }
+    if(invalids.length){
+      alerta.textContent = 'Em cada conjunto use 4, 3, 2 e 1 (sem repetir) e totalize 10.';
+      alerta.style.display = 'block';
+      window.scrollTo({top:invalids[0].offsetTop - 24, behavior:'smooth'});
+      return false;
+    }
+    return true;
+  }
+
+  function coletarRespostas(){
+    const out = {
+      nome: document.getElementById('nome').value.trim(),
+      numero: document.getElementById('numero').value.trim(),
+      respostas: {}
+    };
+    conjuntos.forEach((cj, i) => {
+      const nomeInterno = cj.getAttribute('data-conjunto') || `Conjunto ${i+1}`;
+      const items = [...cj.querySelectorAll('.item')].map(it => ({
+        trait: it.getAttribute('data-trait'),
+        valor: Number(it.querySelector('select').value || 0)
+      }));
+      out.respostas[nomeInterno] = items;
+    });
+    return out;
+  }
+
+  function montarMensagem(data, incluirInterno){
+    let linhas = [];
+    linhas.push('Resultados do Questionário (4•3•2•1)');
+    linhas.push(`Nome: ${data.nome}`);
+    linhas.push(`Telefone: ${data.numero}`);
+    linhas.push('');
+    const keys = Object.keys(data.respostas);
+    keys.forEach((interno, idx) => {
+      const titulo = incluirInterno ? `Conjunto ${String.fromCharCode(65+idx)} — ${interno}`
+                                    : `Conjunto ${String.fromCharCode(65+idx)}`;
+      linhas.push(titulo);
+      const itens = data.respostas[interno];
+      itens.forEach(it => linhas.push(`• ${it.trait}: ${it.valor}`));
+      const soma = itens.reduce((a,b)=>a+Number(b.valor||0),0);
+      linhas.push(`Soma: ${soma}`);
+      linhas.push('');
+    });
+    return linhas.join('\n');
+  }
+
+  function baixarCSV(data){
+    // Cabeçalho: Nome,Numero,ConjuntoInterno,Caracteristica,Valor
+    const rows = [['Nome','Numero','ConjuntoInterno','Caracteristica','Valor']];
+    Object.entries(data.respostas).forEach(([interno, itens]) => {
+      itens.forEach(it => rows.push([data.nome, data.numero, interno, it.trait, it.valor]));
+    });
+    const csv = rows.map(r => r.map(v => {
+      const s = String(v ?? '');
+      return /[",\n]/.test(s) ? '"' + s.replace(/"/g,'""') + '"' : s;
+    }).join(',')).join('\n');
+
+    const blob = new Blob([csv], {type:'text/csv;charset=utf-8;'});
+    const url  = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const d = new Date();
+    const pad = n => String(n).padStart(2,'0');
+    a.href = url;
+    a.download = `questionario_${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}.csv`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  // Finalizar: mostra resultado e baixa CSV
+  form.addEventListener('submit', (e) => {
     e.preventDefault();
     if(!readyToSend()) return;
-    const data = coletarRespostas();
-    const texto = montarMensagem(data,true);
+    const data  = coletarRespostas();
+    const texto = montarMensagem(data, true); // inclui "interno" só no resultado
     resultText.textContent = texto;
     resultBox.style.display = 'block';
     baixarCSV(data);
+    alerta.style.display = 'none';
     okmsg.style.display = 'block';
   });
 
-  btnWhats.addEventListener('click', ()=>{ 
+  // WhatsApp: envia para a cliente
+  btnWhats.addEventListener('click', () => {
     if(!readyToSend()) return;
-    const data = coletarRespostas();
-    const texto = montarMensagem(data,true);
-    const url = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(texto)}`;
-    window.open(url,'_blank');
+    const data  = coletarRespostas();
+    const texto = montarMensagem(data, true);
+    const url   = `https://wa.me/${WHATSAPP_NUM}?text=${encodeURIComponent(texto)}`;
+    window.open(url, '_blank');
   });
+
+  validateForm(); // estado inicial
 })();
 </script>
 </body>
