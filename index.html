@@ -3,240 +3,123 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Quem é você? | Questionário de Perfil</title>
+<title>Questionário – 8 Conjuntos (4•3•2•1)</title>
 <style>
   :root{
-    --bg:#0f172a;
-    --card:#111827;
-    --muted:#94a3b8;
-    --accent:#22d3ee;
-    --accent-2:#38bdf8;
-    --text:#e5e7eb;
-    --good:#22c55e;
-    --warn:#f59e0b;
-    --bad:#ef4444;
+    --bg:#0a192f;        /* azul bem escuro */
+    --panel:#0f2450;     /* painel um pouco mais claro */
+    --ink:#ffffff;       /* texto branco */
+    --muted:#c1c9d6;     /* texto secundário */
+    --border:#1f3a66;    /* borda no dark */
+    --ok:#22c55e;
+    --err:#ef4444;
+    --wa:#25D366;
+    --btn:#1e2a4a;
   }
-  html,body{height:100%}
-  body{
-    margin:0;
-    font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,'Helvetica Neue',Arial;
-    background: radial-gradient(1200px 1200px at 100% -10%, #1e293b 0, #0b1220 50%, #050816 100%);
-    color:var(--text);
-    line-height:1.45;
-  }
-  .container{
-    max-width:1100px;
-    margin:auto;
-    padding:24px;
-  }
-  header{
-    display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-    margin-bottom:16px;
-  }
-  .title{
-    font-size: clamp(22px, 4vw, 32px);
-    font-weight: 800;
-    letter-spacing:.2px;
-    display:flex; align-items:center; gap:10px;
-  }
-  .badge{
-    font-size:12px; padding:4px 8px; border:1px solid #334155; border-radius:999px; color:#cbd5e1
-  }
-  .card{
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
-    border: 1px solid #1f2937;
-    border-radius:16px;
-    box-shadow: 0 7px 30px rgba(2,8,23,0.35);
-  }
-  .intro{padding:18px 20px; color:#cbd5e1; font-size:15px}
-  .intro strong{color:#e2e8f0}
-  .grid{overflow:auto;}
-  table{width:100%; border-collapse:separate; border-spacing:0; min-width:850px;}
-  thead th{position:sticky; top:0; z-index:3; background:#0b1220;}
-  th, td{padding:10px 12px; border-bottom:1px solid #1f2937; text-align:left; vertical-align:middle;}
-  thead th{font-size:12px; text-transform:uppercase; letter-spacing:.08em; color:#a5b4fc;}
-  tbody tr:nth-child(even) td{ background: rgba(255,255,255,0.02); }
-  tbody tr:hover td{ background: rgba(34,211,238,0.06); }
-  .trait{color:#e2e8f0; font-weight:600}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif}
+  header{padding:20px 16px 8px;border-bottom:1px solid var(--border);}
+  header h1{font-size:20px;margin:0 0 4px;color:var(--ink)}
+  header p{margin:0;color:var(--muted);font-size:14px}
+  main{max-width:980px;margin:0 auto;padding:16px}
+  .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0 2px}
+  .field{display:flex;flex-direction:column;gap:6px}
+  .field label{font-size:13px;color:var(--muted)}
+  .field input{background:#0b1733;color:var(--ink);border:1px solid var(--border);border-radius:10px;padding:12px 12px;font-size:14px}
+  .conjunto{border:1px solid var(--border);border-radius:12px;padding:12px 12px 8px;margin:14px 0;background:var(--panel)}
+  .conjunto[data-valid="true"]{border-color:var(--ok)}
+  .conjunto[data-valid="false"]{border-color:var(--err)}
+  .conjunto .top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .badge{font-size:12px;color:#fff;background:#0b1733;border:1px solid var(--border);border-radius:999px;padding:4px 8px}
+  /* 🔒 rótulo interno fica oculto na página */
+  .preview-label{display:none !important;}
+  .lista{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:8px;column-gap:10px;align-items:center}
+  .item{display:contents}
+  .texto{line-height:1.35}
   select{
-    background:#0b1220; color:#e5e7eb; border:1px solid #334155; border-radius:8px; padding:8px 10px;
-    width:80px; font-size:14px; outline:none;
+    appearance:none;background:#0b1733;color:var(--ink);
+    border:1px solid var(--border);border-radius:8px;padding:8px 10px;font-size:14px;min-width:72px
   }
-  select:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px rgba(56,189,248,.25) }
-  .sumcell{font-variant-numeric: tabular-nums; color:#cbd5e1}
-  .sum-bad{color:var(--bad); font-weight:700}
-  .sum-good{color:var(--good); font-weight:700}
-  .actions{display:flex; flex-wrap:wrap; gap:10px; padding:16px; border-top:1px solid #1f2937}
-  button{
-    background: linear-gradient(90deg, var(--accent), var(--accent-2));
-    color:#0b1220; border:none; padding:10px 14px; border-radius:10px; font-weight:700; cursor:pointer;
-  }
-  button.secondary{background:#0b1220; color:#cbd5e1; border:1px solid #334155;}
-  .results{margin-top:16px; padding:16px 18px 4px;
-    display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:14px;}
-  .pill{padding:12px; border:1px solid #334155; border-radius:14px;
-    background: linear-gradient(180deg, rgba(56,189,248,0.05), rgba(56,189,248,0.02));}
-  .pill h4{margin:0 0 6px 0; font-size:15px}
-  .bar{height:10px; border-radius:999px; background:#0b1220; border:1px solid #334155; overflow:hidden}
-  .bar > span{display:block; height:100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); width:0%; transition: width .25s ease;}
-  .foot{color:#94a3b8; font-size:12px; padding:12px 18px 18px;}
-  .hint{color:#a5b4fc; font-weight:600}
-  .error{color:var(--bad); font-weight:700}
-  .ok{color:var(--good); font-weight:700}
-  .nowrap{white-space:nowrap}
-  .center{text-align:center}
+  select:invalid{color:#93a3bf}
+  .sum{margin-top:8px;font-size:12px;color:var(--muted)}
+  .sum.ok{color:var(--ok)}
+  .sum.err{color:var(--err)}
+  .help{font-size:13px;color:var(--muted);margin-top:4px}
+  .footer-actions{display:flex;gap:10px;align-items:center;justify-content:flex-end;padding:16px;border-top:1px solid var(--border);margin-top:10px;flex-wrap:wrap}
+  button{border:1px solid var(--border);border-radius:10px;padding:12px 16px;font-weight:600;cursor:pointer;background:var(--btn);color:var(--ink)}
+  .btn-primary{background:#1b2b52}
+  .btn-primary:disabled{opacity:.5;cursor:not-allowed}
+  .btn-wa{background:var(--wa);color:#053B2B;border-color:#128C7E}
+  .alert{display:none;margin:8px 0 0;color:#fff;background:#7f1d1d;padding:10px;border-radius:8px;font-size:14px;border:1px solid #b91c1c}
+  .okmsg{display:none;margin:8px 0 0;color:#052e1b;background:#064e3b33;padding:10px;border-radius:8px;font-size:14px;border:1px solid #065f46}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
+  @media (hover:none){select{min-height:44px}}
+
+  /* Resultado (respondente vê) */
+  .result-box{display:none;margin-top:14px;background:#0b1733;border:1px solid var(--border);border-radius:12px;padding:14px}
+  .result-box h3{margin:0 0 8px;font-size:16px}
+  .result-box pre{white-space:pre-wrap;word-wrap:break-word;color:#e5e7eb;background:#0f1a36;border:1px dashed var(--border);padding:10px;border-radius:8px}
 </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="title">Quem é você? <span class="badge">Questionário interativo</span></div>
-      <div class="badge">Distribua 1, 2, 3 e 4 em cada linha. A soma precisa dar 10.</div>
-    </header>
+  <header>
+    <h1>Questionário</h1>
+    <p>Atribua <strong>4, 3, 2 e 1</strong> em cada conjunto (sem repetir). O nome/tema do conjunto fica oculto ao respondente.</p>
+  </header>
 
-    <section class="card intro">
-      <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:8px">
-        <label for="nome" style="font-weight:700; color:#e5e7eb">Nome</label>
-        <input id="nome" type="text" placeholder="Digite seu nome..." 
-               style="flex:1; min-width:200px; background:#0b1220; color:#e5e7eb; border:1px solid #334155; border-radius:10px; padding:10px 12px; outline:none"/>
-        <label for="email" style="font-weight:700; color:#e5e7eb">E-mail</label>
-        <input id="email" type="email" placeholder="Opcional" 
-               style="flex:1; min-width:200px; background:#0b1220; color:#e5e7eb; border:1px solid #334155; border-radius:10px; padding:10px 12px; outline:none"/>
-        <label for="fone" style="font-weight:700; color:#e5e7eb">Telefone</label>
-        <input id="fone" type="tel" placeholder="Opcional" 
-               style="flex:1; min-width:160px; background:#0b1220; color:#e5e7eb; border:1px solid #334155; border-radius:10px; padding:10px 12px; outline:none"/>
+  <main>
+    <form id="formQuiz" novalidate>
+      <!-- Identificação -->
+      <div class="grid2" aria-label="Identificação">
+        <div class="field">
+          <label for="nome">Nome completo</label>
+          <input id="nome" name="nome" type="text" placeholder="Digite seu nome" required />
+        </div>
+        <div class="field">
+          <label for="numero">Número (telefone)</label>
+          <input id="numero" name="numero" type="tel" inputmode="tel" placeholder="(00) 00000-0000" required />
+        </div>
       </div>
-      <p><strong>Como funciona:</strong> Em cada linha há 4 características. Atribua os números <strong>1</strong>, <strong>2</strong>, <strong>3</strong> e <strong>4</strong> (sem repetir). A soma da linha deve ser 10.</p>
-    </section>
 
-    <section class="card grid" id="app"></section>
-    <section class="card results" id="results" style="display:none"></section>
-    <div class="foot" id="footnote" style="display:none">
-      <p class="hint">Depois de calcular, você pode exportar ou enviar o resultado diretamente pelo WhatsApp.</p>
-    </div>
-  </div>
+      <!-- ... (A–H conjuntos, iguais aos que te enviei antes) ... -->
+
+      <div class="footer-actions">
+        <button type="button" class="btn-wa" id="btnWhats">Enviar no WhatsApp</button>
+        <button class="btn-primary" id="btnEnviar" type="submit" disabled>Finalizar</button>
+      </div>
+
+      <div class="alert" id="alerta"></div>
+      <div class="okmsg" id="okmsg">Respostas registradas. Obrigado!</div>
+
+      <div class="result-box" id="resultBox">
+        <h3>Seu resultado</h3>
+        <pre id="resultText"></pre>
+      </div>
+    </form>
+  </main>
 
 <script>
-const nomeInput = () => document.getElementById('nome');
-const emailInput = () => document.getElementById('email');
-const foneInput = () => document.getElementById('fone');
+(function(){
+  const WHATSAPP_NUM = '5561981650524'; // número da cliente
 
-const rows = [
-  ["Confiante em si","Otimista","Deliberado","Contido"],
-  ["Aventureiro","Entusiasmado","Previsível","Lógico"],
-  ["Desafiador","Impulsivo","Equilibrado","Preciso"],
-  ["Incansável","Emotivo","Protetor","Contestador"],
-  ["Competitivo","Persuasivo","Acomodado","Curioso"],
-  ["Assertivo","Falador","Modesto","Educado"],
-  ["Experimentador","Sedutor","Fácil de conviver","Consistente"],
-  ["Rigoroso","Sensível","Sincero","Perfeccionista"]
-];
-const colHeaders = [
-  { key: "diretivo",  title: "Direcionado → Diretivo" },
-  { key: "interativo",title: "Influente → Interativo" },
-  { key: "sociais",   title: "Estável → Sociais" },
-  { key: "calculista",title: "Cuidadoso → Calculista" }
-];
+  const form = document.getElementById('formQuiz');
+  const conjuntos = [...document.querySelectorAll('.conjunto')];
+  const btnEnviar = document.getElementById('btnEnviar');
+  const btnWhats = document.getElementById('btnWhats');
+  const alerta = document.getElementById('alerta');
+  const okmsg = document.getElementById('okmsg');
+  const resultBox = document.getElementById('resultBox');
+  const resultText = document.getElementById('resultText');
 
-function buildTable(){
-  const host = document.getElementById('app');
-  const wrapper = document.createElement('div');
-  wrapper.innerHTML = `
-    <table>
-      <thead>
-        <tr>
-          <th style="width:34%">Características</th>
-          ${colHeaders.map(h=>`<th class="nowrap">${h.title}</th>`).join('')}
-          <th class="center">Soma</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows.map((r,ri)=>`
-          <tr data-row="${ri}">
-            <td class="trait">${r.join(" • ")}</td>
-            ${[0,1,2,3].map(ci=>`
-              <td><select data-ri="${ri}" data-ci="${ci}">
-                <option value="">—</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-              </select></td>`).join('')}
-            <td class="sumcell center">0</td>
-          </tr>`).join('')}
-      </tbody>
-    </table>
-    <div class="actions">
-      <button id="btnCalc">Calcular resultado</button>
-      <button id="btnReset" class="secondary">Limpar</button>
-      <button id="btnCSV" class="secondary">Exportar CSV</button>
-      <button id="btnWA" class="secondary">Enviar no WhatsApp</button>
-      <span id="status" class="badge"></span>
-    </div>`;
-  host.appendChild(wrapper);
+  function idOk(){ ... }   // validação
+  function validateForm(){ ... }
+  function readyToSend(){ ... }
+  function coletarRespostas(){ ... }
+  function montarMensagem(data, incluirInterno){ ... }
+  function baixarCSV(data){ ... }
 
-  host.addEventListener('change', e=>{
-    if(e.target.tagName==='SELECT'){
-      updateRowSum(e.target.closest('tr')); saveToLocal();
-    }
-  });
-  document.getElementById('btnCalc').addEventListener('click', calculate);
-  document.getElementById('btnReset').addEventListener('click', resetAll);
-  document.getElementById('btnCSV').addEventListener('click', exportCSV);
-  document.getElementById('btnWA').addEventListener('click', sendWA);
-  restoreFromLocal(); document.querySelectorAll('tbody tr').forEach(updateRowSum);
-}
-function updateRowSum(rowEl){
-  const vals=[...rowEl.querySelectorAll('select')].map(s=>+s.value||0);
-  const sum=vals.reduce((a,b)=>a+b,0);
-  const cell=rowEl.querySelector('.sumcell'); cell.textContent=sum;
-  cell.className='sumcell center '+(sum===10&&isPermutation(vals)?'sum-good':(sum>0?'sum-bad':''));}
-function isPermutation(vals){return !vals.includes(0)&&new Set(vals).size===4;}
-function validateAll(){return [...document.querySelectorAll('tbody tr')].every(tr=>{
-  const vals=[...tr.querySelectorAll('select')].map(s=>+s.value||0);
-  return vals.reduce((a,b)=>a+b,0)===10 && isPermutation(vals);});}
-function calculate(){
-  if(!validateAll()){document.getElementById('status').innerHTML='<span class="error">Corrija as linhas!</span>';return;}
-  const totals=[0,0,0,0];
-  document.querySelectorAll('tbody tr').forEach(tr=>{
-    tr.querySelectorAll('select').forEach((s,ci)=>totals[ci]+=+s.value);
-  });
-  renderResults(totals); saveToLocal();
-  document.getElementById('status').innerHTML='<span class="ok">Resultado abaixo</span>';
-}
-function renderResults(totals){
-  const root=document.getElementById('results'); root.style.display='grid';
-  const max=Math.max(...totals);
-  root.innerHTML=`<div class="pill" style="grid-column:1/-1">
-      <h4>Participante</h4>
-      <p><strong>${nomeInput().value||'—'}</strong><br>${emailInput().value||''} ${foneInput().value||''}</p>
-    </div>`+
-    colHeaders.map((h,i)=>`<div class="pill"><h4>${h.title.split('→')[1].trim()}${totals[i]===max?' ⭐':''}</h4>
-      <div class="bar"><span style="width:${Math.round(totals[i]/(rows.length*4)*100)}%"></span></div>
-      <p>Total: <strong>${totals[i]}</strong></p></div>`).join('');
-  document.getElementById('footnote').style.display='block';
-}
-function resetAll(){document.querySelectorAll('select').forEach(s=>s.value=''); document.querySelectorAll('tbody tr').forEach(updateRowSum); document.getElementById('results').style.display='none'; localStorage.removeItem('quizState');}
-function exportCSV(){
-  if(!validateAll()){alert('Complete todas as linhas.');return;}
-  const totals=[0,0,0,0];
-  document.querySelectorAll('tbody tr').forEach(tr=>{tr.querySelectorAll('select').forEach((s,ci)=>totals[ci]+=+s.value);});
-  const header=["Nome","Email","Telefone","Diretivo","Interativo","Sociais","Calculista"];
-  const row=[nomeInput().value,emailInput().value,foneInput().value,...totals];
-  const csv=[header,row].map(r=>r.join(",")).join("\n");
-  const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"})); a.download="resultado.csv"; a.click();
-}
-function sendWA(){
-  const totals=[0,0,0,0];
-  document.querySelectorAll('tbody tr').forEach(tr=>tr.querySelectorAll('select').forEach((s,ci)=>totals[ci]+=+s.value));
-  const perfis=["Diretivo","Interativo","Sociais","Calculista"];
-  const txt=`Questionário:%0A${nomeInput().value||'—'}%0A${emailInput().value||''}%0A${foneInput().value||''}%0A`+
-    perfis.map((p,i)=>`${p}: ${totals[i]}`).join("%0A");
-  window.open(`https://wa.me/5561981650524?text=${txt}`,'_blank');
-}
-function saveToLocal(){localStorage.setItem('quizState',JSON.stringify([...document.querySelectorAll('tbody tr')].map(tr=>[...tr.querySelectorAll('select')].map(s=>s.value))));}
-function restoreFromLocal(){const raw=localStorage.getItem('quizState'); if(raw){JSON.parse(raw).forEach((rv,ri)=>rv.forEach((v,ci)=>{const sel=document.querySelector(`tr[data-row="${ri}"] select[data-ci="${ci}"]`); if(sel) sel.value=v;}));}}
-buildTable();
+  // listeners para eventos de envio e WhatsApp
+})();
 </script>
 </body>
 </html>
