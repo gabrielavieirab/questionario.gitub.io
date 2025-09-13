@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Questionário – Quem é você? </title>
+<title>Quem é você?</title>
 <style>
   :root{
     --bg:#ffffff;              /* fundo principal branco */
@@ -13,7 +13,7 @@
     --border:#e5e7eb;          /* bordas finas */
     --primary:#3b1a66;         /* roxo escuro */
     --emerald:#065f46;         /* verde esmeralda escuro */
-    --emerald-bright:#10b981;  /* verde p/ realce */
+    --emerald-bright:#10b981;  /* verde mais vibrante para destaques */
     --ok:#16a34a;              /* ok */
     --err:#dc2626;             /* erro */
   }
@@ -21,32 +21,34 @@
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif}
-  header{padding:22px 16px 10px;border-bottom:2px solid var(--primary);background:#fafafa}
-  header h1{font-size:22px;margin:0 0 6px;color:var(--primary)}
+  header{padding:22px 16px 12px;border-bottom:2px solid var(--primary);background:#fafafa}
+  header h1{font-size:24px;margin:0 0 6px;color:var(--primary)}
   header p{margin:0;color:var(--muted);font-size:14px}
 
-  main{max-width:980px;margin:0 auto;padding:16px}
+  main{max-width:1000px;margin:0 auto;padding:16px}
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+  .intro{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px;margin-top:12px}
+  .intro p{margin:.4rem 0;color:var(--muted)}
 
   .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
   .field{display:flex;flex-direction:column;gap:6px}
   .field label{font-size:13px;color:var(--muted)}
   .field input{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
 
-  .conjunto{border:1px solid var(--border);border-radius:14px;padding:14px 14px 10px;margin:14px 0;background:var(--panel)}
-  .conjunto[data-valid="true"]{border-color:var(--emerald-bright)}
-  .conjunto[data-valid="false"]{border-color:var(--err)}
-  .top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .linha{border:1px solid var(--border);border-radius:14px;padding:14px;margin:14px 0;background:var(--panel)}
+  .linha[data-valid="true"]{border-color:var(--emerald-bright)}
+  .linha[data-valid="false"]{border-color:var(--err)}
+  .linha .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
   .badge{font-size:12px;color:#fff;background:var(--primary);border-radius:999px;padding:4px 8px}
   .help{font-size:13px;color:var(--muted)}
-  .preview-label{display:none !important;} /* oculto no UI */
-
   .lista{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:10px;column-gap:12px;align-items:center}
   .item{display:contents}
   .texto{line-height:1.35}
+  .perfil-tag{font-size:11px;font-weight:700;color:#fff;background:var(--emerald);border-radius:6px;padding:2px 6px;margin-left:8px}
   select{
     appearance:none;background:#fff;border:1px solid var(--border);border-radius:10px;
-    padding:8px 10px;min-width:80px
+    padding:8px 10px;min-width:82px
   }
   select:invalid{color:#9ca3af}
   .sum{margin-top:10px;font-size:12px;color:var(--muted)}
@@ -67,23 +69,32 @@
   /* Resultado visível na tela */
   .result-box{display:none;margin-top:14px;background:#f9fafb;border:1px solid var(--border);
     border-radius:12px;padding:14px}
-  .result-box h3{margin:0 0 10px;font-size:18px;color:var(--emerald)}
+  .result-box h3{margin:0 0 8px;font-size:18px;color:var(--emerald)}
+  .totais{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+  .totais .card{border:1px solid var(--border);background:#fff;border-radius:10px;padding:10px}
+  .totais .card h4{margin:0 0 6px;font-size:13px;color:var(--primary)}
   .result-box pre{white-space:pre-wrap;word-wrap:break-word;color:#111827;
     background:#fff;border:1px dashed var(--border);padding:10px;border-radius:8px}
   .result-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
   .btn-outline{background:#fff;border:1px solid var(--primary);color:var(--primary)}
-  .btn-outline:active{transform:translateY(1px)}
+  @media (max-width:720px){.totais{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:480px){.totais{grid-template-columns:1fr}}
   @media (max-width:640px){.grid2{grid-template-columns:1fr}}
   @media (hover:none){select{min-height:44px}}
 </style>
 </head>
 <body>
   <header>
-    <h1>Questionário</h1>
-    <p>Atribua <strong>4, 3, 2 e 1</strong> em cada conjunto (sem repetir). O nome/tema do conjunto fica oculto ao respondente.</p>
+    <h1>Quem é você?</h1>
+    <p>Distribua os números <strong>4, 3, 2 e 1</strong> em cada linha, sem repetir. A soma da linha deve ser sempre <strong>10</strong>.</p>
   </header>
 
   <main>
+    <div class="intro">
+      <p><strong>Como responder:</strong> para cada linha de características, coloque <strong>4</strong> no comportamento mais presente em você; <strong>3</strong> no um pouco menos presente; <strong>2</strong> no menos presente; e <strong>1</strong> no muito menos presente.</p>
+      <p>Não assinale o que gostaria de ser, mas sim o que realmente é. As quatro colunas representam os perfis: <span style="color:var(--primary);font-weight:700">Diretivo</span>, <span style="color:var(--primary);font-weight:700">Interativo</span>, <span style="color:var(--primary);font-weight:700">Sociais</span> e <span style="color:var(--primary);font-weight:700">Calculista</span>.</p>
+    </div>
+
     <form id="formQuiz" novalidate>
       <!-- Identificação -->
       <div class="grid2" aria-label="Identificação">
@@ -97,98 +108,99 @@
         </div>
       </div>
 
-      <!-- ======= CONJUNTO A ======= -->
-      <section class="conjunto" data-conjunto="Direcionado ➜ Diretivo" data-valid="false">
-        <div class="top"><span class="badge">A</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto A">
-          <div class="item" data-trait="Confiante em si"><div class="texto">Confiante em si</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Otimista"><div class="texto">Otimista</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Deliberado"><div class="texto">Deliberado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Contido"><div class="texto">Contido</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- ======== 8 LINHAS (cada uma: Diretivo / Interativo / Sociais / Calculista) ======== -->
+      <!-- L1 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 1</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 1">
+          <div class="item" data-profile="Diretivo"   data-trait="Confiante em si"><div class="texto">Confiante em si <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Otimista"><div class="texto">Otimista <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Deliberado"><div class="texto">Deliberado <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Contido"><div class="texto">Contido <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO B ======= -->
-      <section class="conjunto" data-conjunto="Aventureiro ➜ Experiencial" data-valid="false">
-        <div class="top"><span class="badge">B</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto B">
-          <div class="item" data-trait="Aventureiro"><div class="texto">Aventureiro</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Metódico"><div class="texto">Metódico</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Analítico"><div class="texto">Analítico</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Sociável"><div class="texto">Sociável</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L2 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 2</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 2">
+          <div class="item" data-profile="Diretivo"   data-trait="Aventureiro"><div class="texto">Aventureiro <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Entusiasmado"><div class="texto">Entusiasmado <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Previsível"><div class="texto">Previsível <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Lógico"><div class="texto">Lógico <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO C ======= -->
-      <section class="conjunto" data-conjunto="Planejamento ➜ Organização" data-valid="false">
-        <div class="top"><span class="badge">C</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto C">
-          <div class="item" data-trait="Organizado"><div class="texto">Organizado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Flexível"><div class="texto">Flexível</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Pragmático"><div class="texto">Pragmático</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Criativo"><div class="texto">Criativo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L3 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 3</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 3">
+          <div class="item" data-profile="Diretivo"   data-trait="Desafiador"><div class="texto">Desafiador <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Impulsivo"><div class="texto">Impulsivo <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Equilibrado"><div class="texto">Equilibrado <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Preciso"><div class="texto">Preciso <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO D ======= -->
-      <section class="conjunto" data-conjunto="Relacionamento ➜ Influência" data-valid="false">
-        <div class="top"><span class="badge">D</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto D">
-          <div class="item" data-trait="Comunicativo"><div class="texto">Comunicativo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Empático"><div class="texto">Empático</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Persuasivo"><div class="texto">Persuasivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Reservado"><div class="texto">Reservado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L4 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 4</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 4">
+          <div class="item" data-profile="Diretivo"   data-trait="Incansável"><div class="texto">Incansável <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Emotivo"><div class="texto">Emotivo <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Protetor"><div class="texto">Protetor <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Contestador"><div class="texto">Contestador <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO E ======= -->
-      <section class="conjunto" data-conjunto="Execução ➜ Ritmo" data-valid="false">
-        <div class="top"><span class="badge">E</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto E">
-          <div class="item" data-trait="Ágil"><div class="texto">Ágil</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Cauteloso"><div class="texto">Cauteloso</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Persistente"><div class="texto">Persistente</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Adaptável"><div class="texto">Adaptável</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L5 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 5</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 5">
+          <div class="item" data-profile="Diretivo"   data-trait="Competitivo"><div class="texto">Competitivo <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Persuasivo"><div class="texto">Persuasivo <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Acomodado"><div class="texto">Acomodado <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Curioso"><div class="texto">Curioso <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO F ======= -->
-      <section class="conjunto" data-conjunto="Decisão ➜ Critério" data-valid="false">
-        <div class="top"><span class="badge">F</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto F">
-          <div class="item" data-trait="Racional"><div class="texto">Racional</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Intuitivo"><div class="texto">Intuitivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Detalhista"><div class="texto">Detalhista</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Visionário"><div class="texto">Visionário</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L6 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 6</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 6">
+          <div class="item" data-profile="Diretivo"   data-trait="Assertivo"><div class="texto">Assertivo <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Falador"><div class="texto">Falador <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Modesto"><div class="texto">Modesto <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Educado"><div class="texto">Educado <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO G ======= -->
-      <section class="conjunto" data-conjunto="Resiliência ➜ Emoção" data-valid="false">
-        <div class="top"><span class="badge">G</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto G">
-          <div class="item" data-trait="Estável"><div class="texto">Estável</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Sensível"><div class="texto">Sensível</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Confiante"><div class="texto">Confiante</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Atento ao outro"><div class="texto">Atento ao outro</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L7 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 7</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 7">
+          <div class="item" data-profile="Diretivo"   data-trait="Experimentador"><div class="texto">Experimentador <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Sedutor"><div class="texto">Sedutor <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Fácil de conviver"><div class="texto">Fácil de conviver <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Consistente"><div class="texto">Consistente <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- ======= CONJUNTO H ======= -->
-      <section class="conjunto" data-conjunto="Estratégia ➜ Resultado" data-valid="false">
-        <div class="top"><span class="badge">H</span><span class="help">Atribua 4/3/2/1 (sem repetir).</span></div>
-        <div class="lista" role="group" aria-label="Conjunto H">
-          <div class="item" data-trait="Orientado a metas"><div class="texto">Orientado a metas</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Colaborativo"><div class="texto">Colaborativo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Independente"><div class="texto">Independente</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
-          <div class="item" data-trait="Orientado a processos"><div class="texto">Orientado a processos</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+      <!-- L8 -->
+      <section class="linha" data-valid="false">
+        <div class="top"><span class="badge">Linha 8</span><span class="help">Use 4/3/2/1 sem repetir (soma=10).</span></div>
+        <div class="lista" role="group" aria-label="Linha 8">
+          <div class="item" data-profile="Diretivo"   data-trait="Rigoroso"><div class="texto">Rigoroso <span class="perfil-tag">Diretivo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Interativo" data-trait="Sensível"><div class="texto">Sensível <span class="perfil-tag">Interativo</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Sociais"    data-trait="Sincero"><div class="texto">Sincero <span class="perfil-tag">Sociais</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
+          <div class="item" data-profile="Calculista" data-trait="Perfeccionista"><div class="texto">Perfeccionista <span class="perfil-tag">Calculista</span></div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
         </div>
         <div class="sum">Soma: 0 / 10</div>
       </section>
@@ -198,10 +210,16 @@
       </div>
 
       <div class="alert" id="alerta"></div>
-      <div class="okmsg" id="okmsg">Respostas registradas.</div>
+      <div class="okmsg" id="okmsg">Respostas registradas. Veja abaixo seu resultado.</div>
 
       <div class="result-box" id="resultBox">
-        <h3>Seu resultado</h3>
+        <h3>Resultado</h3>
+        <div class="totais" id="totaisBox">
+          <div class="card"><h4>Diretivo</h4><div id="totalDiretivo">0</div></div>
+          <div class="card"><h4>Interativo</h4><div id="totalInterativo">0</div></div>
+          <div class="card"><h4>Sociais</h4><div id="totalSociais">0</div></div>
+          <div class="card"><h4>Calculista</h4><div id="totalCalculista">0</div></div>
+        </div>
         <pre id="resultText"></pre>
         <div class="result-actions">
           <button type="button" class="btn-outline" id="btnCopy">Copiar resultado</button>
@@ -214,7 +232,7 @@
 <script>
 (function(){
   const form = document.getElementById('formQuiz');
-  const conjuntos = [...document.querySelectorAll('.conjunto')];
+  const linhas = [...document.querySelectorAll('.linha')];
   const btnEnviar = document.getElementById('btnEnviar');
   const alerta = document.getElementById('alerta');
   const okmsg  = document.getElementById('okmsg');
@@ -223,15 +241,20 @@
   const btnCopy = document.getElementById('btnCopy');
   const btnPrint = document.getElementById('btnPrint');
 
-  // Atualização por conjunto: bloqueio de repetição e soma=10
-  conjuntos.forEach((cj) => {
-    const selects = [...cj.querySelectorAll('select')];
-    const sumEl   = cj.querySelector('.sum');
+  const totalDiretivo   = document.getElementById('totalDiretivo');
+  const totalInterativo = document.getElementById('totalInterativo');
+  const totalSociais    = document.getElementById('totalSociais');
+  const totalCalculista = document.getElementById('totalCalculista');
+
+  // Atualização por linha: bloqueia repetição e garante soma=10
+  linhas.forEach((ln) => {
+    const selects = [...ln.querySelectorAll('select')];
+    const sumEl   = ln.querySelector('.sum');
 
     function updateState(){
       const values = selects.map(s => s.value).filter(Boolean);
 
-      // Impedir repetir 4/3/2/1
+      // Impedir repetir 4/3/2/1 na linha
       selects.forEach(s => {
         const current = s.value;
         [...s.options].forEach(opt => {
@@ -246,7 +269,7 @@
       sumEl.textContent = `Soma: ${sum} / 10`;
       const complete = values.length === 4;
       const valid    = complete && sum === 10 && new Set(values).size === 4;
-      cj.dataset.valid = valid ? 'true' : 'false';
+      ln.dataset.valid = valid ? 'true' : 'false';
       sumEl.className = 'sum ' + (valid ? 'ok' : (complete ? 'err' : ''));
 
       validateForm();
@@ -262,7 +285,7 @@
   }
 
   function validateForm(){
-    const allValid = conjuntos.every(cj => cj.dataset.valid === 'true');
+    const allValid = linhas.every(ln => ln.dataset.valid === 'true');
     btnEnviar.disabled = !(allValid && idOk());
     alerta.style.display = 'none';
     okmsg.style.display  = 'none';
@@ -270,7 +293,7 @@
   form.addEventListener('input', validateForm);
 
   function readyToSend(){
-    const invalids = conjuntos.filter(cj => cj.dataset.valid !== 'true');
+    const invalids = linhas.filter(ln => ln.dataset.valid !== 'true');
     if(!idOk()){
       alerta.textContent = 'Preencha o Nome corretamente.';
       alerta.style.display = 'block';
@@ -278,7 +301,7 @@
       return false;
     }
     if(invalids.length){
-      alerta.textContent = 'Em cada conjunto use 4, 3, 2 e 1 (sem repetir) e totalize 10.';
+      alerta.textContent = 'Em cada linha use 4, 3, 2 e 1 (sem repetir) e totalize 10.';
       alerta.style.display = 'block';
       window.scrollTo({top:invalids[0].offsetTop - 24, behavior:'smooth'});
       return false;
@@ -290,35 +313,43 @@
     const out = {
       nome: document.getElementById('nome').value.trim(),
       email: document.getElementById('email').value.trim(),
-      respostas: {}
+      linhas: []
     };
-    conjuntos.forEach((cj, i) => {
-      const nomeInterno = cj.getAttribute('data-conjunto') || `Conjunto ${i+1}`;
-      const items = [...cj.querySelectorAll('.item')].map(it => ({
-        trait: it.getAttribute('data-trait'),
-        valor: Number(it.querySelector('select').value || 0)
+    linhas.forEach((ln, i) => {
+      const itens = [...ln.querySelectorAll('.item')].map(it => ({
+        perfil: it.getAttribute('data-profile'),
+        trait:  it.getAttribute('data-trait'),
+        valor:  Number(it.querySelector('select').value || 0)
       }));
-      out.respostas[nomeInterno] = items;
+      out.linhas.push({linha: i+1, itens});
     });
     return out;
   }
 
-  function montarMensagem(data){
+  function calcularTotais(data){
+    const tot = {Diretivo:0, Interativo:0, Sociais:0, Calculista:0};
+    data.linhas.forEach(l => l.itens.forEach(it => tot[it.perfil] += Number(it.valor||0)));
+    return tot;
+  }
+
+  function montarMensagem(data, tot){
     let linhas = [];
-    linhas.push('Resultados do Questionário (4•3•2•1)');
+    linhas.push('Quem é você? — Resultado');
     linhas.push(`Nome: ${data.nome}`);
     if(data.email) linhas.push(`E-mail: ${data.email}`);
     linhas.push('');
-    const keys = Object.keys(data.respostas);
-    keys.forEach((interno, idx) => {
-      const titulo = `Conjunto ${String.fromCharCode(65+idx)} — ${interno}`; // “interno” só no resultado
-      linhas.push(titulo);
-      const itens = data.respostas[interno];
-      itens.forEach(it => linhas.push(`• ${it.trait}: ${it.valor}`));
-      const soma = itens.reduce((a,b)=>a+Number(b.valor||0),0);
-      linhas.push(`Soma: ${soma}`);
+    Object.values(data.linhas).forEach(reg => {
+      linhas.push(`Linha ${reg.linha}`);
+      reg.itens.forEach(it => linhas.push(`• ${it.trait} (${it.perfil}): ${it.valor}`));
+      const soma = reg.itens.reduce((a,b)=>a+Number(b.valor||0),0);
+      linhas.push(`Soma da linha: ${soma}`);
       linhas.push('');
     });
+    linhas.push('Totais por perfil:');
+    linhas.push(`Diretivo: ${tot.Diretivo}`);
+    linhas.push(`Interativo: ${tot.Interativo}`);
+    linhas.push(`Sociais: ${tot.Sociais}`);
+    linhas.push(`Calculista: ${tot.Calculista}`);
     return linhas.join('\n');
   }
 
@@ -327,8 +358,18 @@
     e.preventDefault();
     if(!readyToSend()) return;
     const data  = coletarRespostas();
-    const texto = montarMensagem(data);
+    const tot   = calcularTotais(data);
+
+    // Totais visuais
+    totalDiretivo.textContent   = tot.Diretivo;
+    totalInterativo.textContent = tot.Interativo;
+    totalSociais.textContent    = tot.Sociais;
+    totalCalculista.textContent = tot.Calculista;
+
+    // Texto detalhado
+    const texto = montarMensagem(data, tot);
     resultText.textContent = texto;
+
     resultBox.style.display = 'block';
     alerta.style.display = 'none';
     okmsg.style.display = 'block';
