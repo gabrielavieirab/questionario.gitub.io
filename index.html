@@ -217,7 +217,7 @@
       <div class="okmsg" id="okmsg">Respostas registradas. Veja abaixo o resultado.</div>
 
       <div class="result-box" id="resultBox">
-        <h3>Resultado</h3>
+        <h3>Resultado do seu perfil</h3>
         <ol class="ranking" id="ranking"></ol>
       </div>
     </form>
@@ -245,8 +245,7 @@
   linhas.forEach(ln => {
     const lista = ln.querySelector('.lista');
     const itens = [...ln.querySelectorAll('.item')];
-    const embaralhados = shuffle(itens);
-    embaralhados.forEach(it => lista.appendChild(it));
+    shuffle(itens).forEach(it => lista.appendChild(it));
   });
 
   /* ===== Validação por linha: 1,2,3,4 (sem repetir) e soma=10 ===== */
@@ -308,26 +307,44 @@
     return true;
   }
 
+  /* ===== Percentuais por perfil com "maior resto" (fecha 100%) ===== */
   function calcularPercentuais(){
-    // soma interna por perfil
+    // somatório interno por perfil (não exibido ao usuário)
     const tot = {Diretivo:0, Interativo:0, Sociais:0, Calculista:0};
     linhas.forEach(ln => {
       ln.querySelectorAll('.item').forEach(it => {
         const v = Number(it.querySelector('select').value || 0);
-        tot[it.getAttribute('data-profile')] += v;
+        const perfil = it.getAttribute('data-profile');
+        tot[perfil] += v;
       });
     });
+
     const totalGeral = 8 * 10; // 8 linhas * soma 10
-    return Object.entries(tot)
-      .map(([perfil, pontos]) => ({perfil, pct: (pontos/totalGeral)*100}))
-      .sort((a,b)=> b.pct - a.pct);
+    const tmp = Object.entries(tot).map(([perfil, pontos]) => {
+      const pctReal = (pontos / totalGeral) * 100;
+      const inteiro = Math.floor(pctReal);
+      const frac = pctReal - inteiro;
+      return { perfil, inteiro, frac, final: inteiro };
+    });
+
+    const somaInt = tmp.reduce((s, x) => s + x.inteiro, 0);
+    let faltando = 100 - somaInt;
+
+    // distribui +1 aos maiores restos fracionários
+    tmp.sort((a,b) => b.frac - a.frac);
+    for(let i=0; i<tmp.length && faltando>0; i++, faltando--){
+      tmp[i].final += 1;
+    }
+
+    // retorna ordenado do maior para o menor
+    return tmp.sort((a,b) => b.final - a.final).map(x => ({perfil:x.perfil, pct:x.final}));
   }
 
   function mostrarRanking(lista){
     rankingEl.innerHTML = '';
     lista.forEach(({perfil, pct}) => {
       const li = document.createElement('li');
-      li.textContent = `${perfil}: ${pct.toFixed(0)}%`;
+      li.textContent = `${perfil}: ${pct}%`;
       rankingEl.appendChild(li);
     });
   }
@@ -336,7 +353,7 @@
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if(!readyToSend()) return;
-    const ranking = calcularPercentuais();
+    const ranking = calcularPercentuais();  // soma sempre = 100%
     mostrarRanking(ranking);
     resultBox.style.display = 'block';
     alerta.style.display = 'none';
