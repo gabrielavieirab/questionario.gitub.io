@@ -6,18 +6,17 @@
 <title>Quem é você?</title>
 <style>
   :root{
-    --bg:#ffffff;              /* fundo principal branco */
-    --ink:#111827;             /* texto principal */
-    --muted:#6b7280;           /* texto secundário */
-    --panel:#ffffff;           /* cartões */
-    --border:#e5e7eb;          /* bordas finas */
-    --primary:#3b1a66;         /* roxo escuro */
-    --emerald:#065f46;         /* verde esmeralda escuro */
-    --emerald-bright:#10b981;  /* verde para destaques */
+    --bg:#ffffff;
+    --ink:#111827;
+    --muted:#6b7280;
+    --panel:#ffffff;
+    --border:#e5e7eb;
+    --primary:#3b1a66;        /* roxo escuro */
+    --emerald:#065f46;        /* verde esmeralda escuro */
+    --emerald-bright:#10b981; /* verde para destaque */
     --ok:#16a34a;
     --err:#dc2626;
   }
-
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Ubuntu,Arial,sans-serif}
@@ -35,7 +34,7 @@
   .linha[data-valid="true"]{border-color:var(--emerald-bright)}
   .linha[data-valid="false"]{border-color:var(--err)}
   .linha .top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-  .badge{font-size:12px;color:#fff;background:var(--primary);border-radius:999px;padding:4px 8px}
+  .badge{font-size:12px;color:#fff;background:var(--primary);border-radius:999px;padding:6px 10px;min-width:30px;text-align:center}
   .help{font-size:13px;color:var(--muted)}
 
   .lista{display:grid;grid-template-columns:minmax(0,1fr) auto;row-gap:10px;column-gap:12px;align-items:center}
@@ -89,13 +88,13 @@
       </div>
 
       <!-- ======== 8 LINHAS (perfis usados apenas internamente) ======== -->
-      <!-- L1 -->
-      <section class="linha" data-valid="false">
+      <!-- 1 -->
+      <section class="linha" data-valid="false" aria-label="Linha 1">
         <div class="top">
-          <span class="badge">Linha 1</span>
+          <span class="badge">1</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 1">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Confiante em si"><div class="texto">Confiante em si</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Otimista"><div class="texto">Otimista</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Deliberado"><div class="texto">Deliberado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -104,13 +103,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L2 -->
-      <section class="linha" data-valid="false">
+      <!-- 2 -->
+      <section class="linha" data-valid="false" aria-label="Linha 2">
         <div class="top">
-          <span class="badge">Linha 2</span>
+          <span class="badge">2</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 2">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Aventureiro"><div class="texto">Aventureiro</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Entusiasmado"><div class="texto">Entusiasmado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Previsível"><div class="texto">Previsível</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -119,13 +118,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L3 -->
-      <section class="linha" data-valid="false">
+      <!-- 3 -->
+      <section class="linha" data-valid="false" aria-label="Linha 3">
         <div class="top">
-          <span class="badge">Linha 3</span>
+          <span class="badge">3</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 3">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Desafiador"><div class="texto">Desafiador</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Impulsivo"><div class="texto">Impulsivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Equilibrado"><div class="texto">Equilibrado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -134,13 +133,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L4 -->
-      <section class="linha" data-valid="false">
+      <!-- 4 -->
+      <section class="linha" data-valid="false" aria-label="Linha 4">
         <div class="top">
-          <span class="badge">Linha 4</span>
+          <span class="badge">4</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 4">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Incansável"><div class="texto">Incansável</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Emotivo"><div class="texto">Emotivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Protetor"><div class="texto">Protetor</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -149,13 +148,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L5 -->
-      <section class="linha" data-valid="false">
+      <!-- 5 -->
+      <section class="linha" data-valid="false" aria-label="Linha 5">
         <div class="top">
-          <span class="badge">Linha 5</span>
+          <span class="badge">5</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 5">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Competitivo"><div class="texto">Competitivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Persuasivo"><div class="texto">Persuasivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Acomodado"><div class="texto">Acomodado</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -164,13 +163,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L6 -->
-      <section class="linha" data-valid="false">
+      <!-- 6 -->
+      <section class="linha" data-valid="false" aria-label="Linha 6">
         <div class="top">
-          <span class="badge">Linha 6</span>
+          <span class="badge">6</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 6">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Assertivo"><div class="texto">Assertivo</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Falador"><div class="texto">Falador</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Modesto"><div class="texto">Modesto</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -179,13 +178,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L7 -->
-      <section class="linha" data-valid="false">
+      <!-- 7 -->
+      <section class="linha" data-valid="false" aria-label="Linha 7">
         <div class="top">
-          <span class="badge">Linha 7</span>
+          <span class="badge">7</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 7">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Experimentador"><div class="texto">Experimentador</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Sedutor"><div class="texto">Sedutor</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Fácil de conviver"><div class="texto">Fácil de conviver</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -194,13 +193,13 @@
         <div class="sum">Soma: 0 / 10</div>
       </section>
 
-      <!-- L8 -->
-      <section class="linha" data-valid="false">
+      <!-- 8 -->
+      <section class="linha" data-valid="false" aria-label="Linha 8">
         <div class="top">
-          <span class="badge">Linha 8</span>
+          <span class="badge">8</span>
           <span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span>
         </div>
-        <div class="lista" role="group" aria-label="Linha 8">
+        <div class="lista">
           <div class="item" data-profile="Diretivo"   data-trait="Rigoroso"><div class="texto">Rigoroso</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Interativo" data-trait="Sensível"><div class="texto">Sensível</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
           <div class="item" data-profile="Sociais"    data-trait="Sincero"><div class="texto">Sincero</div><select required><option value="" disabled selected>—</option><option>4</option><option>3</option><option>2</option><option>1</option></select></div>
@@ -233,7 +232,7 @@
   const resultBox  = document.getElementById('resultBox');
   const rankingEl  = document.getElementById('ranking');
 
-  /* ===== Embaralhar alternativas em cada linha (padrão invisível) ===== */
+  // Embaralhar alternativas em cada linha
   function shuffle(nodes){
     const arr = Array.from(nodes);
     for(let i = arr.length - 1; i > 0; i--){
@@ -248,14 +247,13 @@
     shuffle(itens).forEach(it => lista.appendChild(it));
   });
 
-  /* ===== Validação por linha: 1,2,3,4 (sem repetir) e soma=10 ===== */
+  // Validação por linha: 1,2,3,4 sem repetir (soma=10)
   linhas.forEach((ln) => {
     const selects = [...ln.querySelectorAll('select')];
     const sumEl   = ln.querySelector('.sum');
 
     function updateState(){
       const values = selects.map(s => s.value).filter(Boolean);
-      // impedir repetir
       selects.forEach(s => {
         const current = s.value;
         [...s.options].forEach(opt => {
@@ -264,7 +262,6 @@
           opt.disabled = used && opt.value !== current;
         });
       });
-      // soma e status
       const sum = values.map(Number).reduce((a,b)=>a+b,0);
       sumEl.textContent = `Soma: ${sum} / 10`;
       const complete = values.length === 4;
@@ -281,7 +278,6 @@
     const nome = document.getElementById('nome').value.trim();
     return nome.length >= 3;
   }
-
   function validateForm(){
     const allValid = linhas.every(ln => ln.dataset.valid === 'true');
     btnEnviar.disabled = !(allValid && idOk());
@@ -307,9 +303,8 @@
     return true;
   }
 
-  /* ===== Percentuais por perfil com "maior resto" (fecha 100%) ===== */
+  // Percentuais por perfil com "maior resto" (fecha 100%)
   function calcularPercentuais(){
-    // somatório interno por perfil (não exibido ao usuário)
     const tot = {Diretivo:0, Interativo:0, Sociais:0, Calculista:0};
     linhas.forEach(ln => {
       ln.querySelectorAll('.item').forEach(it => {
@@ -319,7 +314,7 @@
       });
     });
 
-    const totalGeral = 8 * 10; // 8 linhas * soma 10
+    const totalGeral = 8 * 10; // 80 pontos
     const tmp = Object.entries(tot).map(([perfil, pontos]) => {
       const pctReal = (pontos / totalGeral) * 100;
       const inteiro = Math.floor(pctReal);
@@ -330,13 +325,11 @@
     const somaInt = tmp.reduce((s, x) => s + x.inteiro, 0);
     let faltando = 100 - somaInt;
 
-    // distribui +1 aos maiores restos fracionários
     tmp.sort((a,b) => b.frac - a.frac);
     for(let i=0; i<tmp.length && faltando>0; i++, faltando--){
       tmp[i].final += 1;
     }
 
-    // retorna ordenado do maior para o menor
     return tmp.sort((a,b) => b.final - a.final).map(x => ({perfil:x.perfil, pct:x.final}));
   }
 
@@ -349,11 +342,11 @@
     });
   }
 
-  // Finalizar: mostra APENAS o resultado (percentuais, em ordem)
+  // Finalizar
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if(!readyToSend()) return;
-    const ranking = calcularPercentuais();  // soma sempre = 100%
+    const ranking = calcularPercentuais();
     mostrarRanking(ranking);
     resultBox.style.display = 'block';
     alerta.style.display = 'none';
