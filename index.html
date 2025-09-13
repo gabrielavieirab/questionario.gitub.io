@@ -24,11 +24,9 @@
   header{padding:22px 16px 12px;border-bottom:2px solid var(--primary);background:#fafafa}
   header h1{font-size:24px;margin:0 0 6px;color:var(--primary)}
   header p{margin:0 0 8px;color:var(--muted);font-size:14px}
-  .intro{border:1px solid var(--border);border-radius:12px;background:#fff;padding:14px;margin:12px auto 0;max-width:1000px}
-  .intro p{margin:.45rem 0;color:var(--muted)}
 
   main{max-width:1000px;margin:0 auto;padding:16px}
-  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 6px}
+  .grid1{display:grid;grid-template-columns:1fr;gap:12px;margin:14px 0 6px}
   .field{display:flex;flex-direction:column;gap:6px}
   .field label{font-size:13px;color:var(--muted)}
   .field input{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff}
@@ -71,7 +69,6 @@
   .ranking{margin:8px 0 0;padding-left:18px}
   .ranking li{margin:4px 0}
 
-  @media (max-width:640px){.grid2{grid-template-columns:1fr}}
   @media (hover:none){select{min-height:44px}}
 </style>
 </head>
@@ -81,25 +78,17 @@
     <p><strong>Como funciona a numeração:</strong> para cada linha de características, assinale <strong>“4”</strong> para o comportamento <strong>mais presente</strong> em você; <strong>“3”</strong> para um pouco menos presente; <strong>“2”</strong> para o menos presente ainda; e <strong>“1”</strong> para o comportamento <strong>muito menos presente</strong> em você. Não escolha o que gostaria de ser, mas o que realmente é.</p>
   </header>
 
-  <div class="intro">
-    <p>Em cada linha abaixo, há quatro comportamentos. <strong>Numere de 1 a 4, sem repetir</strong>, os comportamentos abaixo (um número por opção). A soma da linha será sempre 10.</p>
-  </div>
-
   <main>
     <form id="formQuiz" novalidate>
       <!-- Identificação -->
-      <div class="grid2" aria-label="Identificação">
+      <div class="grid1" aria-label="Identificação">
         <div class="field">
           <label for="nome">Nome completo</label>
           <input id="nome" name="nome" type="text" placeholder="Digite seu nome" required />
         </div>
-        <div class="field">
-          <label for="email">E-mail (opcional)</label>
-          <input id="email" name="email" type="email" placeholder="Digite o seu email" />
-        </div>
       </div>
 
-      <!-- ======== 8 LINHAS (internamente mapeadas: Diretivo / Interativo / Sociais / Calculista) ======== -->
+      <!-- ======== 8 LINHAS (perfis usados apenas internamente) ======== -->
       <!-- L1 -->
       <section class="linha" data-valid="false">
         <div class="top">
@@ -225,7 +214,7 @@
       </div>
 
       <div class="alert" id="alerta"></div>
-      <div class="okmsg" id="okmsg">Respostas registradas. Veja abaixo seu resultado.</div>
+      <div class="okmsg" id="okmsg">Respostas registradas. Veja abaixo o resultado.</div>
 
       <div class="result-box" id="resultBox">
         <h3>Resultado</h3>
@@ -244,7 +233,7 @@
   const resultBox  = document.getElementById('resultBox');
   const rankingEl  = document.getElementById('ranking');
 
-  /* ===== Embaralhar alternativas de cada linha (sem revelar perfis) ===== */
+  /* ===== Embaralhar alternativas em cada linha (padrão invisível) ===== */
   function shuffle(nodes){
     const arr = Array.from(nodes);
     for(let i = arr.length - 1; i > 0; i--){
@@ -260,7 +249,7 @@
     embaralhados.forEach(it => lista.appendChild(it));
   });
 
-  /* ===== Validação linha a linha: 1,2,3,4 sem repetir (soma=10) ===== */
+  /* ===== Validação por linha: 1,2,3,4 (sem repetir) e soma=10 ===== */
   linhas.forEach((ln) => {
     const selects = [...ln.querySelectorAll('select')];
     const sumEl   = ln.querySelector('.sum');
@@ -291,7 +280,7 @@
 
   function idOk(){
     const nome = document.getElementById('nome').value.trim();
-    return nome.length >= 3; // e-mail é opcional
+    return nome.length >= 3;
   }
 
   function validateForm(){
@@ -319,40 +308,36 @@
     return true;
   }
 
-  function coletarRespostas(){
-    // soma por perfil (interno)
+  function calcularPercentuais(){
+    // soma interna por perfil
     const tot = {Diretivo:0, Interativo:0, Sociais:0, Calculista:0};
     linhas.forEach(ln => {
-      [...ln.querySelectorAll('.item')].forEach(it => {
+      ln.querySelectorAll('.item').forEach(it => {
         const v = Number(it.querySelector('select').value || 0);
-        const perfil = it.getAttribute('data-profile');
-        tot[perfil] += v;
+        tot[it.getAttribute('data-profile')] += v;
       });
     });
-    return tot;
+    const totalGeral = 8 * 10; // 8 linhas * soma 10
+    return Object.entries(tot)
+      .map(([perfil, pontos]) => ({perfil, pct: (pontos/totalGeral)*100}))
+      .sort((a,b)=> b.pct - a.pct);
   }
 
-  function mostrarRanking(tot){
-    const totalGeral = 8 * 10; // 8 linhas * soma 10
-    const arr = Object.entries(tot).map(([perfil, pontos]) => {
-      const pct = (pontos/totalGeral)*100;
-      return {perfil, pontos, pct};
-    }).sort((a,b)=> b.pct - a.pct); // ordem decrescente
-
+  function mostrarRanking(lista){
     rankingEl.innerHTML = '';
-    arr.forEach(({perfil, pct, pontos}) => {
+    lista.forEach(({perfil, pct}) => {
       const li = document.createElement('li');
-      li.textContent = `${perfil}: ${pct.toFixed(0)}% (${pontos} pts)`;
+      li.textContent = `${perfil}: ${pct.toFixed(0)}%`;
       rankingEl.appendChild(li);
     });
   }
 
-  // Finalizar: calcula percentuais e mostra em tela
+  // Finalizar: mostra APENAS o resultado (percentuais, em ordem)
   form.addEventListener('submit', (e) => {
     e.preventDefault();
     if(!readyToSend()) return;
-    const totais = coletarRespostas();
-    mostrarRanking(totais);
+    const ranking = calcularPercentuais();
+    mostrarRanking(ranking);
     resultBox.style.display = 'block';
     alerta.style.display = 'none';
     okmsg.style.display = 'block';
