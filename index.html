@@ -64,7 +64,7 @@
 <!-- EmailJS opcional (remova se não for usar) -->
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
-  // Substitua pelos seus dados do EmailJS (https://www.emailjs.com/)
+  // Substitua quando quiser envio automático via EmailJS (emailjs.com)
   const EMAILJS_PUBLIC_KEY = "COLOQUE_SUA_PUBLIC_KEY_AQUI";
   const EMAILJS_SERVICE_ID = "COLOQUE_SEU_SERVICE_ID_AQUI";
   const EMAILJS_TEMPLATE_ID = "COLOQUE_SEU_TEMPLATE_ID_AQUI";
@@ -93,7 +93,7 @@
         </div>
       </div>
 
-      <!-- ======== 8 LINHAS (perfis usados apenas internamente) ======== -->
+      <!-- ======== 8 CONJUNTOS ======== -->
       <!-- 1 -->
       <section class="linha" data-valid="false" aria-label="Linha 1">
         <div class="top"><span class="badge">1</span><span class="help">Numere de 1 a 4, sem repetir, os comportamentos abaixo.</span></div>
@@ -289,33 +289,22 @@
     return true;
   }
 
-  // Coletar respostas completas (para e-mail)
-  function coletarDetalhes(){
-    const nome = document.getElementById('nome').value.trim();
-    const email = document.getElementById('email').value.trim();
-    const linhasDet = [];
-    linhas.forEach((ln, idx) => {
-      const itens = [...ln.querySelectorAll('.item')].map(it => ({
-        trait: it.getAttribute('data-trait'),
-        perfil: it.getAttribute('data-profile'),
-        valor: Number(it.querySelector('select').value || 0)
-      }));
-      const soma = itens.reduce((a,b)=>a+b.valor,0);
-      linhasDet.push({idx: idx+1, itens, soma});
-    });
-    return {nome, email, linhas: linhasDet};
-  }
-
   // Percentuais por perfil com "maior resto" (fecha 100%)
-  function calcularPercentuais(linhasDet){
+  function calcularPercentuais(){
     const tot = {Diretivo:0, Interativo:0, Sociais:0, Calculista:0};
-    linhasDet.forEach(l => l.itens.forEach(it => tot[it.perfil] += it.valor));
+    linhas.forEach(ln => {
+      ln.querySelectorAll('.item').forEach(it => {
+        const v = Number(it.querySelector('select').value || 0);
+        const perfil = it.getAttribute('data-profile');
+        tot[perfil] += v;
+      });
+    });
     const totalGeral = 8 * 10;
     const tmp = Object.entries(tot).map(([perfil, pontos]) => {
       const pctReal = (pontos/totalGeral)*100;
       const inteiro = Math.floor(pctReal);
       const frac = pctReal - inteiro;
-      return {perfil, inteiro, frac, final: inteiro};
+      return { perfil, inteiro, frac, final: inteiro };
     });
     const somaInt = tmp.reduce((s,x)=>s+x.inteiro,0);
     let faltando = 100 - somaInt;
@@ -324,38 +313,33 @@
     return tmp.sort((a,b)=> b.final - a.final).map(x => ({perfil:x.perfil, pct:x.final}));
   }
 
-  function montarTextoEmail(det, ranking){
-    const linhasTxt = [];
-    linhasTxt.push(`Quem é você? — Respostas e Resultado`);
-    linhasTxt.push(`Nome: ${det.nome}`);
-    linhasTxt.push(`E-mail do respondente: ${det.email}`);
-    linhasTxt.push('');
-    linhasTxt.push('Respostas por conjunto (característica: valor):');
-    det.linhas.forEach(l => {
-      linhasTxt.push(`— Conjunto ${l.idx} (soma ${l.soma}):`);
-      l.itens.forEach(it => linhasTxt.push(`   • ${it.trait}: ${it.valor}`));
-    });
-    linhasTxt.push('');
-    linhasTxt.push('Resultado do perfil (percentuais):');
-    ranking.forEach(r => linhasTxt.push(`   • ${r.perfil}: ${r.pct}%`));
-    return linhasTxt.join('\n');
-  }
-
-  function mostrarRankingTela(ranking){
+  function mostrarRankingTela(lista){
     rankingEl.innerHTML = '';
-    ranking.forEach(({perfil, pct}) => {
+    lista.forEach(({perfil, pct}) => {
       const li = document.createElement('li');
       li.textContent = `${perfil}: ${pct}%`;
       rankingEl.appendChild(li);
     });
   }
 
-  // Envio por e-mail
-  async function enviarEmail(det, ranking){
-    const assunto = `Quem é você? – Resultado de ${det.nome}`;
-    const corpo = montarTextoEmail(det, ranking);
+  function montarResumoApenasResultado(nome, email, ranking){
+    const linhas = [];
+    linhas.push(`Quem é você? — Resultado do perfil`);
+    linhas.push(`Nome: ${nome}`);
+    linhas.push(`E-mail do respondente: ${email}`);
+    linhas.push('');
+    linhas.push('Percentuais:');
+    ranking.forEach(r => linhas.push(`• ${r.perfil}: ${r.pct}%`));
+    return linhas.join('\n');
+  }
 
-    // Se EmailJS estiver configurado, usa automático
+  // Envio por e-mail (apenas resultado)
+  async function enviarEmailSomenteResultado(nome, email, ranking){
+    const DESTINO = "alessandra@consultarh.com.br";
+    const assunto = `Quem é você? – Resultado de ${nome}`;
+    const corpo = montarResumoApenasResultado(nome, email, ranking);
+
+    // EmailJS se configurado
     if (typeof emailjs !== "undefined" &&
         EMAILJS_PUBLIC_KEY.indexOf("PUBLIC_KEY") === -1 &&
         EMAILJS_SERVICE_ID.indexOf("SERVICE_ID") === -1 &&
@@ -363,8 +347,8 @@
       try{
         await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
           to_email: DESTINO,
-          from_email: det.email,
-          from_name: det.nome,
+          from_email: email,
+          from_name: nome,
           subject: assunto,
           message: corpo
         });
@@ -374,7 +358,7 @@
       }
     }
 
-    // Fallback: mailto (abre cliente de e-mail do usuário)
+    // Fallback: mailto (abre o cliente de e-mail do usuário)
     const mailto = `mailto:${encodeURIComponent(DESTINO)}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
     window.location.href = mailto;
     return true;
@@ -385,18 +369,17 @@
     e.preventDefault();
     if(!readyToSend()) return;
 
-    const det = coletarDetalhes();
-    const ranking = calcularPercentuais(det.linhas);
+    const nome  = document.getElementById('nome').value.trim();
+    const email = document.getElementById('email').value.trim();
 
-    // Mostra resultado em tela
-    mostrarRankingTela(ranking);
+    const ranking = calcularPercentuais();            // % que somam 100
+    mostrarRankingTela(ranking);                      // mostra na tela
     resultBox.style.display = 'block';
     alerta.style.display = 'none';
     okmsg.style.display = 'block';
     resultBox.scrollIntoView({behavior:'smooth', block:'start'});
 
-    // Envia por e-mail
-    await enviarEmail(det, ranking);
+    await enviarEmailSomenteResultado(nome, email, ranking); // envia só o resultado
   });
 
   validateForm();
